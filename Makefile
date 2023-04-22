@@ -1,0 +1,10 @@
+NAME = minitalk
+CLIANT_NAME  = client
+SERVER_NAME  = server
+
+
+$(MINTALK) : $(CLIANT_NAME) $(SERVER_NAME)
+
+$(CLIANT_NAME) :
+
+$(SERVER_NAME) :
