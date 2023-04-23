@@ -1,5 +1,5 @@
-#ifndef SERVER_H
-# define SERVER_H
+#ifndef CLIENT_H
+# define CLIENT_H
 
 #include <signal.h>
 #include <stdlib.h>
@@ -7,6 +7,6 @@
 #include "libft/libft.h"
 #include "libftprintf/ft_printf.h"
 
-int	main(void);
+int	main(int argc, char **argv);
 
 #endif
