@@ -1,35 +1,44 @@
-#include "server.h"
+#include "minitalk.h"
 
-// static volatile sig_atomic_t = 0;
-
-void	put_word(int signum)
+static void	sig_handler(int signum, siginfo_t *info, void *ucontext)
 {
-	static volatile int	bit;
-	static volatile int	word;
+	static volatile sig_atomic_t	bit;
+	static volatile sig_atomic_t	buf;
+	char	c;
 
-	if (signum == 0x04)
-			exit(0);
+	(void)ucontext;
 	if (signum == SIGUSR2)
-		word |= (1 << bit);
+		buf |= (1 << bit);
 	bit++;
 	if (bit == 8)
 	{
-		ft_printf("%c", (char)word);
+		c = buf;
+		write(1, &c, 1);
+		if (c == 0)
+			kill(info->si_pid, SIGUSR1);
 		bit = 0;
-		word = 0;
+		buf = 0;
 	}
 }
 
 int main(void)
 {
 	struct sigaction	sa;
+	int					ret;
 
 	ft_printf("%d\n", getpid());
-	sigemptyset(&sa.sa_mask);
-	sa.sa_handler = put_word;
+	ret = sigemptyset(&sa.sa_mask);
+	if (ret < 0)
+		exit(1);
+	ft_memset(&sa, 0, sizeof(sa));
+	sa.sa_sigaction = sig_handler;
 	sa.sa_flags = 0;
-	sigaction(SIGUSR1, &sa, NULL);
-	sigaction(SIGUSR2, &sa, NULL);
+	ret = sigaction(SIGUSR1, &sa, NULL);
+	if (ret < 0)
+		exit(1);
+	ret = sigaction(SIGUSR2, &sa, NULL);
+	if (ret < 0)
+		exit(1);
 	while (1)
 	{
 		pause();
@@ -44,6 +53,7 @@ int main(void)
 //     int        sa_flags;
 //     void     (*sa_restorer)(void);　→ 廃止予定で使用すべきではない。
 // };
+// sigaction構造体はunion(共用体)のため、sa_handlerとsa_sigactionは同時に使用できない。
 
 // sig_atomic_t は、非同期割り込みが発生するシグナルハンドラ内でも使用することができる、整数型の変数です。
 
@@ -66,3 +76,7 @@ int main(void)
 
 // 制御文字：文字コードの規格で定義される文字のうち、ディスプレイ・プリンタなどに対して特別な動作（制御）をさせるために用いられる文字のこと。
 // 0x04 = EOT = end of transmission(伝送終了)
+
+// pouse()は、シグナルが発生するまでプロセスを停止する関数。
+
+// memsetが必要な理由は
