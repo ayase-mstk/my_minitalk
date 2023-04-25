@@ -1,5 +1,5 @@
-#ifndef MINITALK_H
-# define MINITALK_H
+#ifndef MINITALK_BONUS_H
+# define MINITALK_BOONUS_H
 
 #include <signal.h>
 #include "libft/libft.h"

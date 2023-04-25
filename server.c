@@ -4,9 +4,10 @@ static void	sig_handler(int signum, siginfo_t *info, void *ucontext)
 {
 	static volatile sig_atomic_t	bit;
 	static volatile sig_atomic_t	buf;
-	char	c;
+	char							c;
 
 	(void)ucontext;
+	(void)info;
 	if (signum == SIGUSR2)
 		buf |= (1 << bit);
 	bit++;
@@ -14,14 +15,12 @@ static void	sig_handler(int signum, siginfo_t *info, void *ucontext)
 	{
 		c = buf;
 		write(1, &c, 1);
-		if (c == 0)
-			kill(info->si_pid, SIGUSR1);
 		bit = 0;
 		buf = 0;
 	}
 }
 
-int main(void)
+int	main(void)
 {
 	struct sigaction	sa;
 	int					ret;
