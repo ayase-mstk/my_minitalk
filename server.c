@@ -4,7 +4,7 @@ static void	sig_handler(int signum, siginfo_t *info, void *ucontext)
 {
 	static volatile sig_atomic_t	bit;
 	static volatile sig_atomic_t	buf;
-	char							c;
+	static unsigned char			c;
 
 	(void)ucontext;
 	(void)info;

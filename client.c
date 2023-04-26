@@ -22,7 +22,7 @@ static void	send_signal(int c, pid_t pid)
 		}
 		c >>= 1;
 		i++;
-		usleep(100);
+		usleep(60);
 	}
 }
 
@@ -39,6 +39,7 @@ int	main(int ac, char **av)
 	{
 		send_signal(av[2][i], pid);
 		i++;
+		usleep(50);
 	}
 	return (0);
 }
