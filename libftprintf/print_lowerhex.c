@@ -36,8 +36,6 @@ static ssize_t	number_of_digit(unsigned int n)
 	ssize_t	cnt;
 
 	cnt = 0;
-	if (n < 0)
-		cnt++;
 	while (n)
 	{
 		n /= 16;
